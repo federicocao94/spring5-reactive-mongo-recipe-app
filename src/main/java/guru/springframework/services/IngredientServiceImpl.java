@@ -51,14 +51,12 @@ public class IngredientServiceImpl implements IngredientService {
     		String ingredientId) {
 
         return recipeRepository.findById(recipeId)
-        		.map(recipe -> recipe.getIngredients()
-        				.stream()
-        				.filter(ingredient -> ingredient.getId().equalsIgnoreCase(ingredientId))
-        				.findFirst())
-        		.filter(Optional::isPresent)
+        		.flatMapIterable(Recipe::getIngredients)
+        		.filter(ingredient -> ingredient.getId().equalsIgnoreCase(ingredientId))
+        		.single()
         		.map(ingredient -> {
         			IngredientCommand command = 
-        					ingredientToIngredientCommand.convert(ingredient.get());
+        					ingredientToIngredientCommand.convert(ingredient);
         			command.setRecipeId(recipeId);
         			return command;
         		});
