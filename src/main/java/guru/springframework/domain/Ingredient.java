@@ -1,11 +1,10 @@
 package guru.springframework.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-
 import java.math.BigDecimal;
 import java.util.UUID;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by jt on 6/13/17.
