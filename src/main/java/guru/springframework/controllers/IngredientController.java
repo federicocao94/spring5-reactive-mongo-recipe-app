@@ -70,14 +70,19 @@ public class IngredientController {
     @GetMapping("recipe/{recipeId}/ingredient/{id}/update")
     public String updateRecipeIngredient(@PathVariable String recipeId,
                                          @PathVariable String id, Model model){
-        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id).block());
 
+        model.addAttribute("ingredient",
+        		ingredientService.findByRecipeIdAndIngredientId(recipeId, id));
+    	
         model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
         return "recipe/ingredient/ingredientform";
     }
 
     @PostMapping("recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@ModelAttribute IngredientCommand command){
+    public String saveOrUpdate(@PathVariable String recipeId,
+    		@ModelAttribute IngredientCommand command){
+    	//TODO fix save exception caused by block instructions
+//    	command.setRecipeId(recipeId);
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
 
         log.debug("saved ingredient id:" + savedCommand.getId());
