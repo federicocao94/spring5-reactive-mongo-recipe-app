@@ -21,7 +21,7 @@ public class WebConfig {
 	 * @return
 	 */
 	@Bean
-	RouterFunction<?> routes(RecipeService recipeService) {
+	public RouterFunction<?> routes(RecipeService recipeService) {
 		
 		return RouterFunctions.route(GET("/api/recipes"), 
 				serverRequest -> ServerResponse
