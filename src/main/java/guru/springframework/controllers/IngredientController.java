@@ -7,6 +7,8 @@ import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
 import guru.springframework.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,6 +44,13 @@ public class IngredientController {
     private void initBinder(WebDataBinder webDataBinder) {
     	this.webDataBinder = webDataBinder;
     }
+    
+    
+    @ModelAttribute("uomList")
+    private Flux<UnitOfMeasureCommand> populateUomList() {
+    	return unitOfMeasureService.listAllUoms();
+    }
+    
 
     @GetMapping("/recipe/{recipeId}/ingredients")
     public String listIngredients(@PathVariable String recipeId, Model model){
@@ -74,8 +83,6 @@ public class IngredientController {
         //init uom
         ingredientCommand.setUom(new UnitOfMeasureCommand());
 
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
-
         return INGREDIENT_EDIT_FORM;
     }
 
@@ -84,7 +91,6 @@ public class IngredientController {
                                          @PathVariable String id, Model model){
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, id).block());
 
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
         return INGREDIENT_EDIT_FORM;
     }
 
@@ -99,9 +105,6 @@ public class IngredientController {
             bindingResult.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
-            
-//            model.addAttribute("ingredient", command);
-            model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
             
             return INGREDIENT_EDIT_FORM;
         }
